@@ -1,0 +1,4 @@
+
+rootProject.name = 'javatech'
+include('inmemMetricsServer')
+include('metricsAPI')

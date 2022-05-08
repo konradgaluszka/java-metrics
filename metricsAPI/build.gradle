@@ -1,0 +1,11 @@
+
+plugins {
+    id 'java'
+}
+
+version = '0.0.1'
+group = 'javatech'
+
+repositories {
+    mavenCentral()
+}
