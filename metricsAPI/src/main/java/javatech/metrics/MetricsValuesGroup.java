@@ -1,4 +1,6 @@
 package javatech.metrics;
 
-public record MetricsValuesGroup(MetricTags tags, MetricValues values){
+import java.time.Instant;
+
+public record MetricsValuesGroup(MetricTags tags, MetricValues values, Instant time){
 }

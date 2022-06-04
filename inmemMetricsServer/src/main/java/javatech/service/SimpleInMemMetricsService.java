@@ -12,6 +12,7 @@ import javatech.metrics.MultipleMetricsTimeRangeQuery;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -43,10 +44,24 @@ public class SimpleInMemMetricsService implements MetricsService {
     }
 
     @Override
+    public List<String> getMetricNamesForProject(String project) {
+        if (metricsMetadataPerProject.containsKey(project)) {
+            return metricsMetadataPerProject.get(project).keySet().stream().toList();
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    @Override
     public void storeMetrics(MultipleMetricsStoreRequest storeRequest) {
         validateStoreRequest(storeRequest);
         updateMetadata(storeRequest);
         updateMetrics(storeRequest);
+    }
+
+    @Override
+    public List<String> getProjectsNames() {
+        return metricsMetadataPerProject.keySet().stream().toList();
     }
 
     private void updateMetadata(MultipleMetricsStoreRequest storeRequest) {
@@ -139,7 +154,7 @@ public class SimpleInMemMetricsService implements MetricsService {
                         .filter(e -> metricsQuery.metricNames().contains(e.getKey()))
                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
                 results.putIfAbsent(ts, new HashSet<>());
-                results.get(ts).add(new MetricsValuesGroup(new MetricTags(candidate.getKey().tags()), new MetricValues(matchingMetrics)));
+                results.get(ts).add(new MetricsValuesGroup(new MetricTags(candidate.getKey().tags()), new MetricValues(matchingMetrics), ts));
             }
         }
         return results;

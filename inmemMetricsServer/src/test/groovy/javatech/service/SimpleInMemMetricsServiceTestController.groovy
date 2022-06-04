@@ -14,7 +14,7 @@ import spock.lang.Unroll
 
 import java.time.Instant
 
-class SimpleInMemMetricsServiceTest extends Specification {
+class SimpleInMemMetricsServiceTestController extends Specification {
     @Subject
     private MetricsService service
 
@@ -29,7 +29,7 @@ class SimpleInMemMetricsServiceTest extends Specification {
                 "project1",
                 time,
                 ["metric1": new MetricsMetadata(MetricType.COUNTER)],
-                [new MetricsValuesGroup(new MetricTags(["svc": "svc1", "method": "method1"]), new MetricValues(["metric1": 245]))]);
+                [new MetricsValuesGroup(new MetricTags(["svc": "svc1", "method": "method1"]), new MetricValues(["metric1": 245]), time)])
         when:
         service.storeMetrics(storedMetrics)
         def result = service.getMetricsForQuery(new MultipleMetricsTimeRangeQuery("project1", time, time, ["metric1"], []))
@@ -53,22 +53,22 @@ class SimpleInMemMetricsServiceTest extends Specification {
                 "project1",
                 time1,
                 ["metric1": new MetricsMetadata(MetricType.COUNTER)],
-                [new MetricsValuesGroup(new MetricTags(["svc": "svc1", "method": "method1"]), new MetricValues(["metric1": 245]))]);
+                [new MetricsValuesGroup(new MetricTags(["svc": "svc1", "method": "method1"]), new MetricValues(["metric1": 245]), time1)])
         def storedMetrics2 = new MultipleMetricsStoreRequest(
                 "project1",
                 time2,
                 ["metric1": new MetricsMetadata(MetricType.COUNTER)],
-                [new MetricsValuesGroup(new MetricTags(["svc": "svc1", "method": "method1"]), new MetricValues(["metric1": 1]))]);
+                [new MetricsValuesGroup(new MetricTags(["svc": "svc1", "method": "method1"]), new MetricValues(["metric1": 1]), time2)])
         def storedMetrics3 = new MultipleMetricsStoreRequest(
                 "project1",
                 time3,
                 ["metric1": new MetricsMetadata(MetricType.COUNTER)],
-                [new MetricsValuesGroup(new MetricTags(["svc": "svc1", "method": "method1"]), new MetricValues(["metric1": 9]))]);
+                [new MetricsValuesGroup(new MetricTags(["svc": "svc1", "method": "method1"]), new MetricValues(["metric1": 9]), time3)])
         def storedMetrics4 = new MultipleMetricsStoreRequest(
                 "project1",
                 time4,
                 ["metric1": new MetricsMetadata(MetricType.COUNTER)],
-                [new MetricsValuesGroup(new MetricTags(["svc": "svc1", "method": "method1"]), new MetricValues(["metric1": 20]))]);
+                [new MetricsValuesGroup(new MetricTags(["svc": "svc1", "method": "method1"]), new MetricValues(["metric1": 20]), time4)])
         when:
         service.storeMetrics(storedMetrics1)
         service.storeMetrics(storedMetrics2)
@@ -93,7 +93,7 @@ class SimpleInMemMetricsServiceTest extends Specification {
                 "project1",
                 time,
                 ["metric1": new MetricsMetadata(MetricType.COUNTER), "metric2": new MetricsMetadata(MetricType.COUNTER)],
-                [new MetricsValuesGroup(new MetricTags(["svc": "svc1", "method": "method1"]), new MetricValues(["metric1": 245, "metric2": 100]))]);
+                [new MetricsValuesGroup(new MetricTags(["svc": "svc1", "method": "method1"]), new MetricValues(["metric1": 245, "metric2": 100]), time)])
 
         when:
         service.storeMetrics(storedMetrics1)
@@ -114,12 +114,12 @@ class SimpleInMemMetricsServiceTest extends Specification {
                 "project1",
                 time,
                 ["metric1": new MetricsMetadata(MetricType.COUNTER)],
-                [new MetricsValuesGroup(new MetricTags(["svc": "svc1", "method": "method1"]), new MetricValues(["metric1": 245]))]);
+                [new MetricsValuesGroup(new MetricTags(["svc": "svc1", "method": "method1"]), new MetricValues(["metric1": 245]), time)])
         def storedMetrics2 = new MultipleMetricsStoreRequest(
                 "project1",
                 time,
                 ["metric1": new MetricsMetadata(MetricType.COUNTER)],
-                [new MetricsValuesGroup(new MetricTags(["svc": "svc1", "method": "method2"]), new MetricValues(["metric1": 230]))]);
+                [new MetricsValuesGroup(new MetricTags(["svc": "svc1", "method": "method2"]), new MetricValues(["metric1": 230]), time)])
 
         when:
         service.storeMetrics(storedMetrics1)
@@ -142,7 +142,7 @@ class SimpleInMemMetricsServiceTest extends Specification {
                 "project1",
                 time,
                 ["metric1": new MetricsMetadata(MetricType.COUNTER)],
-                [new MetricsValuesGroup(new MetricTags(["svc": "svc1", "method": "method1"]), new MetricValues(["metric1": 245]))]);
+                [new MetricsValuesGroup(new MetricTags(["svc": "svc1", "method": "method1"]), new MetricValues(["metric1": 245]), time)])
 
         when:
         service.storeMetrics(storedMetrics1)
@@ -163,12 +163,12 @@ class SimpleInMemMetricsServiceTest extends Specification {
                 "project1",
                 time1,
                 ["metric1": new MetricsMetadata(metricType)],
-                [new MetricsValuesGroup(new MetricTags(["svc": "svc1", "method": "method1"]), new MetricValues(["metric1": 245]))]);
+                [new MetricsValuesGroup(new MetricTags(["svc": "svc1", "method": "method1"]), new MetricValues(["metric1": 245]), time1)])
         def storedUpdatedValue = new MultipleMetricsStoreRequest(
                 "project1",
                 time2,
                 ["metric1": new MetricsMetadata(metricType)],
-                [new MetricsValuesGroup(new MetricTags(["svc": "svc1", "method": "method1"]), new MetricValues(["metric1": 230]))]);
+                [new MetricsValuesGroup(new MetricTags(["svc": "svc1", "method": "method1"]), new MetricValues(["metric1": 230]), time2)])
 
         when:
         service.storeMetrics(storedInitialValue)
@@ -187,5 +187,23 @@ class SimpleInMemMetricsServiceTest extends Specification {
         metricType         | expectedValue1 | expectedValue2
         MetricType.COUNTER | 245            | 475
         MetricType.GAUGE   | 245            | 230
+    }
+
+    def "GetMetricNamesForProjectReturnsAllRegisteredMetricsForThatProject"() {
+        given:
+        def time = Instant.parse("2022-05-01T18:35:00.00Z")
+        def storedMetrics = new MultipleMetricsStoreRequest(
+                "project1",
+                time,
+                ["metric1": new MetricsMetadata(MetricType.COUNTER)],
+                [new MetricsValuesGroup(new MetricTags(["svc": "svc1", "method": "method1"]), new MetricValues(["metric1": 245]), time)])
+        when:
+        service.storeMetrics(storedMetrics)
+        def namesForProject1 = service.getMetricNamesForProject("project1")
+        def namesForOtherProject = service.getMetricNamesForProject("otherProject")
+
+        then:
+        namesForProject1 == ["metric1"]
+        namesForOtherProject == []
     }
 }
